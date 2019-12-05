@@ -6,9 +6,9 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required
 try:
-    from blueprints import resources, about
+    from blueprints import resources, about, maps
 except ModuleNotFoundError:
-    from .blueprints import resources, about
+    from .blueprints import resources, about, maps
 
 
 db = SQLAlchemy()
@@ -58,6 +58,7 @@ def create_app(test_config=None):
 
     # register blueprints (like views in django)
     app.register_blueprint(resources.bp)
+    app.register_blueprint(maps.bp)
     app.register_blueprint(about.bp)
     import auth
     app.register_blueprint(auth.bp)
@@ -66,5 +67,13 @@ def create_app(test_config=None):
     @login_required
     def landing():
         return render_template('landing/index.html')
+
+    @app.route('/termsofservice')
+    def termsofservice():
+        return render_template('termsofservice.html')
+
+    @app.route('/privacypolicy')
+    def privacypolicy():
+        return render_template('privacypolicy.html')
 
     return app
