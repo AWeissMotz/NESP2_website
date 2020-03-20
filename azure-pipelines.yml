@@ -85,4 +85,16 @@ stages:
               azureSubscription: $(azureServiceConnectionId)
               appName: $(webAppName)
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
-              startUpCommand: 'python3 app/setup_maps.py && python3 index.py'
+
+          - script: |
+              cd wwwroot
+              cat > file.env << ENDOFFILE 
+              POSTGRES_URL=$POSTGRES_URL
+              POSTGRES_USER=$POSTGRES_USER
+              POSTGRES_PW=$POSTGRES_PW
+              POSTGRES_DB=$POSTGRES_DB
+              ENDOFFILE
+              python3 app/setup_maps.py && python3 index.py
+            displayName: "generate env file and start app"
+
+
